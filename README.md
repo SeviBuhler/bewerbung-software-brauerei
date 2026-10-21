@@ -25,7 +25,7 @@ b4dcafe feat(ai): read-only Monitoring-Agent für eigenen Trading-Bot
 5eed42a feat(game): 2D-ARPG in Godot, gebaut mit Claude Code als Pair
 d8b0a42 feat(web): Planungskalender-PWA mit Supabase (RLS, Trigger)
 a11ce55 feat(prod): OASG-App für Schichtplanung & Buchungen live auf Vercel
-3a1b2c3 feat(biz): 3summit KLG mitgegründet, eigener Shopify-Store
+3a1b2c3 feat(biz): 3summit KLG mitgegründet - WebCrawler deployed
 0b5e55e feat(zhaw): Informatikstudium gestartet – Java, Algorithmen, Datenbanken
 ```
 
@@ -53,6 +53,7 @@ HPE ProLiant ML350 mit Proxmox VE, RAID 1, VMs, Fernzugriff per Tailscale, dazu 
 - **Racetrack (Java):** BFS-Pathfinder über den Geschwindigkeits-Zustandsraum, Refactoring nach Clean Code
 - **WörterPuzzle (JavaFX):** MVP-Architektur, Multiplayer, Tests mit JUnit & Mockito
 - **Turing-Maschinen:** universelle TM als Emulator (Python) und als HTML-Simulator mit SVG-Zustandsdiagrammen
+- **Python-Scripts:** verschiedene Berechnungen mit Python
 
 ---
 
@@ -69,12 +70,12 @@ Langfassung → **[AI.md](AI.md)**
 - [x] Redet gerne direkt mit Kunden (Mitgründer, eigener Shop, Hardware-Verkauf)
 - [x] Deutsch fliessend, Englisch gut
 - [x] Kicker: motiviert. Airhockey: gefährlich.
-- [ ] Barista-Kaffee an eurer Zapfanlage – **wartet auf euren Approve**
+- [ ] Volles Glas aus eurer Zapfanlage – **wartet auf euren Approve**
 
-**Verfügbar ab:** TODO · **Pensum:** TODO
+**Verfügbar ab:** Kündigungsfrist 3 Monate · **Pensum:** 60% - 80%
 
 ## 📬 Kontakt
 
-Severin Bühler · [sevi.buehler@outlook.com](mailto:sevi.buehler@outlook.com) · 079 407 37 43 · [LinkedIn](TODO)
+Severin Bühler · [sevi.buehler@outlook.com](mailto:sevi.buehler@outlook.com) · 079 407 37 43 · [LinkedIn](https://www.linkedin.com/in/severin-b%C3%BChler-626935254/)
 
 > Just Fucking Do It. – Ich hab's gemacht. 🍺
