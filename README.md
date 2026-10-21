@@ -33,7 +33,7 @@ a11ce55 feat(prod): OASG-App für Schichtplanung & Buchungen live auf Vercel
 
 ## 🛠️ Was ich gebraut habe
 
-### OASG – Schichtplanung & Buchungen · *in Produktion*
+### OASG – Schichtplanung & Buchungen · *Live*
 Schichtplanungs- und Massage-Buchungs-App für einen echten Betrieb. Echte Nutzer, echtes Deployment.
 **Stack:** Vite · React · Tailwind · Upstash Redis · Vercel
 **Live:** [timesheetoasg.vercel.app](https://timesheetoasg.vercel.app)
@@ -42,6 +42,25 @@ Schichtplanungs- und Massage-Buchungs-App für einen echten Betrieb. Echte Nutze
 ### Planungskalender-PWA · *in Arbeit*
 Gemeinsamer Planungskalender als PWA. Bewusst als Lernprojekt ohne Copy-Paste: Ich schreibe den Code selbst und lasse mich nur anleiten.
 **Stack:** Angular · Tailwind · Supabase (Postgres, Row Level Security, Trigger-Funktionen)
+**Code:** [SeviBuhler/planungskalender](https://github.com/SeviBuhler/planungskalender)
+
+### vinz.bio – Website für eine Getränkemarke *Live* 
+Markenwebsite mit scrollgesteuerten Animationen, Standortkarte und Kontaktformular.
+**Stack:** zuBeginn: Gatsby · umgebaut zu React · React Router · Framer Motion · CSS · Google Maps API · Web3Forms · Vercel
+**Live:** [SeviBuhler/vinzbio-website](https://github.com/SeviBuhler/vinzbio-website)
+**Code:** [vinzbio.verce.app](https://vinzbio.vercel.app/home)
+
+### Webcrawler für einen Kunden · *Teamprojekt, beim Kunden in Betrieb*
+Im Digital Talents Program mit zwei Kollegen für eine Partnerfirma der Schule entwickelt:
+ein Crawler, der Daten aus Webseiten automatisiert ausliest, auch aus dynamisch geladenen Inhalten und eingebetteten iframes.
+**Stack:** Python · Selenium · Django
+**Code** [SeviBuhler/MatchD-Crawler](https://github.com/SeviBuhler/MatchD-Crawler)
+
+### Hochzeitswebsite · *für ein echtes Brautpaar*
+Website, auf der sich die Gäste anmelden und nach der Hochzeit die Fotos ansehen und herunterladen konnten.
+**Stack:** HTML · CSS · JavaScript · Firebase Firestore · Firebase Storage
+**Live** [wedding-website-demo.vercel.app](https://wedding-website-demo.vercel.app/)
+**Code:** [SeviBuhler/Hochzeit_Lu_Roman](https://github.com/SeviBuhler/Hochzeit_Lu_Roman)
 
 ### Homelab & Ops
 HPE ProLiant ML350 mit Proxmox VE, RAID 1, VMs, Fernzugriff per Tailscale, dazu ein Synology NAS. Darauf läuft u. a. ein Claude-gestützter Monitoring-Agent für meinen Trading-Bot – absichtlich **nur lesend**.
