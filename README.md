@@ -62,9 +62,6 @@ HPE ProLiant ML350 mit Proxmox VE, RAID 1, VMs, Fernzugriff per Tailscale, dazu 
 Kurzfassung: AI macht mich schneller, nicht schlauer. Jeder Diff wird gelesen.
 Langfassung → **[AI.md](AI.md)**
 
-## 😂 Code of Meme
-Ihr habt ein Meme Glossary. Ich habe eine Antwort darauf → **[MEMES.md](MEMES.md)**
-
 ---
 
 ## ✅ Merge-Checkliste
