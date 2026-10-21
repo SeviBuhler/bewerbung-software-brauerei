@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sevi braut · Bewerbung Software Brauerei</title>
+<meta name="description" content="Bewerbung von Severin Bühler als Fullstack Developer bei der Software Brauerei AG – als Mini-Game.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #110c07;
+    --panel: #1c140c;
+    --line: #3a2a18;
+    --amber: #f2a31b;
+    --amber-hi: #ffcf5a;
+    --foam: #fff6e0;
+    --ink: #f6ead2;
+    --muted: #b49f80;
+    --bug: #ff5d5d;
+    --ok: #8fdc5f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink); font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  body { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 16px; }
+
+  header { width: min(100%, 480px); display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); }
+  header a { color: var(--amber); text-decoration: none; border-bottom: 1px dashed var(--amber); }
+  header a:hover { color: var(--amber-hi); }
+
+  #stage { position: relative; width: min(100%, 480px); height: min(66dvh, 620px); border: 2px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--panel); }
+  canvas { display: block; touch-action: none; cursor: grab; }
+
+  .overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 24px; background: rgba(17, 12, 7, .9); backdrop-filter: blur(2px); }
+  .overlay.hidden { display: none; }
+  .kicker { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  h1 { font-family: 'Press Start 2P', monospace; font-size: clamp(26px, 8vw, 40px); line-height: 1.35; color: var(--amber); text-shadow: 0 4px 0 #6b3f05; }
+  .overlay p { font-size: 14px; line-height: 1.6; max-width: 34ch; }
+  .keys { font-size: 12px !important; color: var(--muted); }
+
+  .btn { display: inline-block; font-family: 'Press Start 2P', monospace; font-size: 12px; padding: 14px 18px; border-radius: 8px; border: 2px solid var(--amber); color: var(--amber); background: transparent; text-decoration: none; cursor: pointer; transition: transform .08s, background .15s; }
+  .btn:hover { background: rgba(242, 163, 27, .12); }
+  .btn:active { transform: translateY(2px); }
+  .btn.primary { background: var(--amber); color: #1a1006; box-shadow: 0 4px 0 #6b3f05; }
+  .btn.primary:hover { background: var(--amber-hi); }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .link { background: none; border: none; color: var(--muted); font: inherit; font-size: 12px; text-decoration: underline; cursor: pointer; }
+
+  #log { width: min(100%, 480px); min-height: 78px; list-style: none; font-size: 12px; line-height: 1.5; color: var(--muted); }
+  #log li { padding: 2px 0; animation: in .25s ease-out; }
+  #log li b.ok { color: var(--ok); }
+  #log li b.bad { color: var(--bug); }
+  #log li:not(:first-child) { opacity: .55; }
+  @keyframes in { from { opacity: 0; transform: translateY(-4px); } }
+</style>
+</head>
+<body>
+
+<header>
+  <span>$ ./bewerbung --firma="Software Brauerei"</span>
+  <a id="skip" href="#">Spiel überspringen →</a>
+</header>
+
+<div id="stage">
+  <canvas id="game" aria-label="Mini-Game: Fang Skills mit dem Bierglas und weiche den Bugs aus"></canvas>
+
+  <div id="intro" class="overlay">
+    <p class="kicker">PR #1 · Fullstack Developer</p>
+    <h1>SEVI<br>BRAUT</h1>
+    <p>Füllt das Glas mit 12 Skills. Fangt keine Bugs – die kosten Schaum.</p>
+    <p class="keys">← → oder A D · oder Maus/Finger ziehen</p>
+    <button id="start" class="btn primary">Anzapfen ▶</button>
+  </div>
+
+  <div id="end" class="overlay hidden">
+    <p class="kicker">Glas voll · Build passing</p>
+    <h1>PROST!</h1>
+    <p id="stats"></p>
+    <p>Das war die Kurzfassung. Der Rest steht im Repo: Projekte, Code of Meme und wie ich mit AI arbeite.</p>
+    <a id="repoBtn" class="btn primary" href="#">Zum Repo →</a>
+    <div class="row">
+      <a id="memeBtn" class="btn" href="#">Code of Meme</a>
+      <a id="aiBtn" class="btn" href="#">AI.md</a>
+    </div>
+    <button id="again" class="link">Nochmals zapfen</button>
+  </div>
+</div>
+
+<ol id="log" aria-live="polite"></ol>
+
+<noscript><p>Ohne JavaScript kein Bier. Hier direkt zum Repo: <a href="https://github.com/SeviBuhler/bewerbung-software-brauerei">GitHub</a></p></noscript>
+
+<script>
+(() => {
+  // ====== Nur hier anpassen ======
+  const CONFIG = {
+    repo: "https://github.com/SeviBuhler/bewerbung-software-brauerei",
+    goal: 12,
+  };
+  // ===============================
+
+  const SKILLS = [
+    { t: "React + Vite",   f: "OASG-App für Schichtplanung & Buchungen – läuft live auf Vercel." },
+    { t: "Tailwind",       f: "UI ohne CSS-Spaghetti." },
+    { t: "Supabase",       f: "Planungskalender-PWA: Postgres-Schema, RLS und Trigger." },
+    { t: "Redis",          f: "Upstash Redis als Datenhaltung der OASG-App." },
+    { t: "Vercel",         f: "Deploy statt «läuft bei mir lokal»." },
+    { t: "Java",           f: "ZHAW: Concurrency, Clean Code, BFS-Pathfinder fürs Racetrack-Projekt." },
+    { t: "JUnit & Mockito", f: "Getestet wird von mir. Nicht vom Kunden." },
+    { t: "SQL",            f: "Modul Datenbanken an der ZHAW – aktuell im 3. Semester." },
+    { t: "Proxmox",        f: "Homelab: HPE ProLiant, RAID 1, eigene VMs." },
+    { t: "Tailscale",      f: "Fernzugriff aufs Homelab, ohne offene Ports." },
+    { t: "Python",         f: "Universelle Turing-Maschine als Emulator gebaut. Ja, wirklich." },
+    { t: "Godot",          f: "Eigenes 2D-ARPG in GDScript – mit Claude Code als Pair." },
+    { t: "Claude Code",    f: "Daily Driver. Jeder Diff wird gelesen." },
+    { t: "Git",            f: "Commits mit Sinn statt «fix stuff»." },
+  ];
+
+  const BUGS = [
+    { t: "läuft bei mir lokal",  f: "Kein Deployment-Konzept. Schaum −1." },
+    { t: "no bugs pls",          f: "Prompt ≠ Qualitätssicherung. Schaum −1." },
+    { t: "System.out.println",   f: "Debugging aus der Steinzeit. Schaum −1." },
+    { t: "Gulasch-Migration",    f: "Agent war sehr selbstbewusst. Diff nicht gelesen. Schaum −1." },
+    { t: "Projekt-Nanny",        f: "Braucht hier niemand. Schaum −1." },
+    { t: "Hype-Driven-Dev",      f: "Cutting-edge ja, Hype nein. Schaum −1." },
+    { t: "Sehr geehrte …",       f: "Direkt in den Papierkorb. Schaum −1." },
+  ];
+
+  const $ = (s) => document.querySelector(s);
+  const stage = $("#stage"), cv = $("#game"), ctx = cv.getContext("2d");
+  const FONT = "700 13px 'JetBrains Mono', monospace";
+
+  // Links
+  $("#skip").href = CONFIG.repo;
+  $("#repoBtn").href = CONFIG.repo;
+  $("#memeBtn").href = CONFIG.repo + "/blob/main/MEMES.md";
+  $("#aiBtn").href = CONFIG.repo + "/blob/main/AI.md";
+
+  let W = 0, H = 0;
+  const glass = { x: 0, tx: 0, y: 0, w: 74, h: 96 };
+  let items = [], bubbles = [], pool = [];
+  let state = "intro", score = 0, bugsHit = 0, bugsDodged = 0, elapsed = 0, spawnT = 0, shake = 0, last = 0;
+  const keys = { left: false, right: false };
+
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+  function resize() {
+    const r = stage.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    cv.width = W * dpr; cv.height = H * dpr;
+    cv.style.width = W + "px"; cv.style.height = H + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    glass.y = H - glass.h - 16;
+    if (!glass.x) glass.x = glass.tx = W / 2;
+    glass.x = glass.tx = clamp(glass.x, glass.w / 2, W - glass.w / 2);
+  }
+  window.addEventListener("resize", resize);
+
+  // ---------- Input ----------
+  const setKey = (e, down) => {
+    if (["ArrowLeft", "a", "A"].includes(e.key)) { keys.left = down; e.preventDefault(); }
+    if (["ArrowRight", "d", "D"].includes(e.key)) { keys.right = down; e.preventDefault(); }
+  };
+  window.addEventListener("keydown", (e) => setKey(e, true));
+  window.addEventListener("keyup", (e) => setKey(e, false));
+  const pointer = (e) => { const r = cv.getBoundingClientRect(); glass.tx = clamp(e.clientX - r.left, glass.w / 2, W - glass.w / 2); };
+  cv.addEventListener("pointerdown", (e) => { cv.setPointerCapture(e.pointerId); pointer(e); });
+  cv.addEventListener("pointermove", (e) => { if (e.pointerType === "mouse" || e.buttons) pointer(e); });
+
+  // ---------- Game ----------
+  function start() {
+    items = []; bubbles = []; pool = [];
+    score = 0; bugsHit = 0; bugsDodged = 0; elapsed = 0; spawnT = 0.4; shake = 0;
+    $("#log").innerHTML = "";
+    $("#intro").classList.add("hidden");
+    $("#end").classList.add("hidden");
+    state = "play";
+    log("Zapfhahn offen.", "Fang die Skills, weich den Bugs aus.", "ok", "▶");
+  }
+  $("#start").addEventListener("click", start);
+  $("#again").addEventListener("click", start);
+
+  function win() {
+    state = "end";
+    items = [];
+    for (let i = 0; i < 40; i++) addBubble(glass.x + (Math.random() - .5) * glass.w, glass.y + 10, true);
+    const bugText = bugsHit === 0 ? "kein Bug im Glas" : bugsHit === 1 ? "1 Bug im Glas" : bugsHit + " Bugs im Glas";
+    $("#stats").textContent = `Gebraut in ${Math.round(elapsed)} s · ${bugText} · ${bugsDodged} ausgewichen`;
+    setTimeout(() => $("#end").classList.remove("hidden"), 700);
+  }
+
+  function spawn() {
+    const bad = Math.random() < Math.min(0.28 + elapsed * 0.004, 0.42);
+    let data;
+    if (bad) data = BUGS[(Math.random() * BUGS.length) | 0];
+    else { if (!pool.length) pool = shuffle(SKILLS.slice()); data = pool.pop(); }
+    const label = (bad ? "🐛 " : "🌾 ") + data.t;
+    ctx.font = FONT;
+    const w = ctx.measureText(label).width + 22, h = 26;
+    const x = clamp(8 + Math.random() * (W - w - 16), 4, Math.max(4, W - w - 4));
+    const v = (H / 4.2) * (1 + elapsed * 0.012) * (bad ? 1.1 : 1) * (0.85 + Math.random() * 0.3);
+    items.push({ x, y: -h, w, h, v, bad, label, data, done: false });
+  }
+
+  function catchItem(it) {
+    if (it.bad) {
+      bugsHit++; score = Math.max(0, score - 1); shake = 1;
+      log(it.data.t, it.data.f, "bad", "✗");
+    } else {
+      score++;
+      log(it.data.t, it.data.f, "ok", "✓");
+      for (let i = 0; i < 6; i++) addBubble(glass.x + (Math.random() - .5) * glass.w * .6, glass.y + glass.h * .6);
+      if (score >= CONFIG.goal) win();
+    }
+  }
+
+  function log(title, text, cls, sym) {
+    const li = document.createElement("li");
+    li.innerHTML = `<b class="${cls}">${sym} ${title}</b> — `;
+    li.append(document.createTextNode(text));
+    const ol = $("#log");
+    ol.prepend(li);
+    while (ol.children.length > 3) ol.lastChild.remove();
+  }
+
+  function addBubble(x, y, big) {
+    bubbles.push({ x, y, r: (big ? 3 : 1.5) + Math.random() * (big ? 5 : 2.5), vy: -(30 + Math.random() * (big ? 120 : 50)), vx: (Math.random() - .5) * (big ? 80 : 20), life: 1 });
+  }
+
+  function update(dt) {
+    elapsed += dt;
+    const speed = W * 1.4;
+    if (keys.left) glass.tx -= speed * dt;
+    if (keys.right) glass.tx += speed * dt;
+    glass.tx = clamp(glass.tx, glass.w / 2, W - glass.w / 2);
+    glass.x += (glass.tx - glass.x) * Math.min(1, dt * 14);
+
+    spawnT -= dt;
+    if (spawnT <= 0) { spawn(); spawnT = Math.max(0.5, 0.95 - elapsed * 0.01); }
+
+    const gx = glass.x - glass.w / 2, gy = glass.y;
+    for (const it of items) {
+      it.y += it.v * dt;
+      if (it.y + it.h >= gy && it.y <= gy + 22 && it.x + it.w >= gx && it.x <= gx + glass.w) {
+        it.done = true; catchItem(it);
+        if (state !== "play") break;
+      } else if (it.y > H) {
+        it.done = true; if (it.bad) bugsDodged++;
+      }
+    }
+    items = items.filter((i) => !i.done);
+  }
+
+  function updateFx(dt) {
+    shake = Math.max(0, shake - dt * 3);
+    for (const b of bubbles) { b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt * .9; }
+    bubbles = bubbles.filter((b) => b.life > 0);
+  }
+
+  // ---------- Drawing ----------
+  function rr(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+
+  function drawBackground() {
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#21170d"); g.addColorStop(1, "#120c07");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    // Kellerwand
+    ctx.strokeStyle = "rgba(255,220,170,.035)"; ctx.lineWidth = 1;
+    const bh = 22, bw = 54;
+    for (let row = 0, y = 0; y < H; row++, y += bh) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      for (let x = (row % 2) * bw / 2; x < W; x += bw) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + bh); ctx.stroke(); }
+    }
+    // Zapfhahn
+    ctx.fillStyle = "#3a2a18"; ctx.fillRect(0, 0, W, 10);
+    ctx.fillStyle = "#6b4a22"; rr(W / 2 - 14, 4, 28, 16, 4); ctx.fill();
+    ctx.fillStyle = "#8a6430"; ctx.fillRect(W / 2 - 3, 18, 6, 10);
+  }
+
+  function drawItems() {
+    ctx.font = FONT; ctx.textBaseline = "middle";
+    for (const it of items) {
+      ctx.fillStyle = it.bad ? "rgba(255,93,93,.16)" : "rgba(242,163,27,.18)";
+      ctx.strokeStyle = it.bad ? "#ff5d5d" : "#f2a31b"; ctx.lineWidth = 1.5;
+      rr(it.x, it.y, it.w, it.h, 13); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = it.bad ? "#ffb3b3" : "#ffe2a6";
+      ctx.fillText(it.label, it.x + 11, it.y + it.h / 2 + 1);
+    }
+  }
+
+  function glassPath(x, y, w, h) {
+    ctx.beginPath();
+    ctx.moveTo(x - w / 2, y); ctx.lineTo(x + w / 2, y);
+    ctx.lineTo(x + w / 2 - 8, y + h); ctx.lineTo(x - w / 2 + 8, y + h); ctx.closePath();
+  }
+
+  function drawGlass() {
+    const { x, y, w, h } = glass;
+    const level = clamp(score / CONFIG.goal, 0, 1);
+    const fillH = (h - 8) * level;
+    ctx.save();
+    glassPath(x, y, w, h); ctx.clip();
+    ctx.fillStyle = "rgba(255,255,255,.05)"; ctx.fillRect(x - w, y, w * 2, h);
+    if (level > 0) {
+      const top = y + h - fillH;
+      const g = ctx.createLinearGradient(0, top, 0, y + h);
+      g.addColorStop(0, "#ffcf5a"); g.addColorStop(1, "#d9800f");
+      ctx.fillStyle = g; ctx.fillRect(x - w, top, w * 2, fillH);
+      // Schaum
+      ctx.fillStyle = "#fff6e0";
+      ctx.fillRect(x - w, top - 8, w * 2, 9);
+      for (let i = -w / 2; i <= w / 2; i += 11) { ctx.beginPath(); ctx.arc(x + i, top - 8, 6, 0, Math.PI * 2); ctx.fill(); }
+      // Perlen
+      ctx.fillStyle = "rgba(255,255,255,.35)";
+      for (let i = 0; i < 6; i++) {
+        const py = y + h - ((performance.now() / 18 + i * 37) % Math.max(fillH, 1));
+        ctx.beginPath(); ctx.arc(x - w / 3 + i * (w / 8), py, 1.4, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    ctx.restore();
+    // Glasrand + Henkel
+    ctx.strokeStyle = "rgba(255,246,224,.85)"; ctx.lineWidth = 2.5;
+    glassPath(x, y, w, h); ctx.stroke();
+    ctx.beginPath(); ctx.arc(x + w / 2 + 2, y + h * .45, 15, -Math.PI / 2.4, Math.PI / 2.4); ctx.stroke();
+    ctx.strokeStyle = "rgba(255,255,255,.25)"; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(x - w / 2 + 9, y + 8); ctx.lineTo(x - w / 2 + 14, y + h - 10); ctx.stroke();
+  }
+
+  function drawBubbles() {
+    for (const b of bubbles) {
+      ctx.fillStyle = `rgba(255,246,224,${b.life * .8})`;
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
+  function drawHud() {
+    if (state === "intro") return;
+    ctx.font = "10px 'Press Start 2P', monospace"; ctx.textBaseline = "top";
+    ctx.fillStyle = "#f2a31b"; ctx.textAlign = "left";
+    ctx.fillText(`SKILLS ${Math.min(score, CONFIG.goal)}/${CONFIG.goal}`, 12, 22);
+    ctx.fillStyle = "#ff8a8a"; ctx.textAlign = "right";
+    ctx.fillText(`BUGS ${bugsHit}`, W - 12, 22);
+    ctx.textAlign = "left";
+  }
+
+  function frame(t) {
+    const dt = Math.min(0.033, last ? (t - last) / 1000 : 0); last = t;
+    if (state === "play") update(dt);
+    updateFx(dt);
+    ctx.save();
+    if (shake > 0) ctx.translate((Math.random() - .5) * 10 * shake, (Math.random() - .5) * 6 * shake);
+    drawBackground(); drawItems(); drawGlass(); drawBubbles(); drawHud();
+    ctx.restore();
+    requestAnimationFrame(frame);
+  }
+
+  resize();
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => requestAnimationFrame(frame));
+})();
+</script>
+</body>
+</html>
