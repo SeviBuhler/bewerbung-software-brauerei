@@ -32,12 +32,11 @@
 
 ## Ein echter Fall
 
-<!-- TODO: Hier eine echte Geschichte einsetzen. Das ist der wichtigste Teil dieser Datei. Vorlage: -->
 
-**Kontext:** *Welches Projekt, was wolltest du erreichen?*
-**Was der Agent gemacht hat:** *Was hat er vorgeschlagen oder geändert?*
-**Was mir aufgefallen ist:** *Woran hast du gemerkt, dass etwas nicht stimmt? Diff, Test, Durchklicken?*
-**Lösung:** *Was hast du korrigiert, und was hast du daraus für deinen Workflow mitgenommen?*
+**Kontext:** *Planungskalender-PWA mit Supabase. Ich habe mit AI die Row-Level-Security-Policies für die Gruppenlogik erarbeitet.*
+**Was der Agent gemacht hat:** *Eine Policy auf group_members, die in ihrer eigenen Subquery wieder group_members abfragt. Das las sich logisch korrekt*
+**Was mir aufgefallen ist:** *Beim ersten Test über das Frontend schlug der Signup mit einem 500er fehl. Die erste Vermutung der AI, eine Race Condition, war falsch. In den Postgres-Logs stand die echte Ursache: infinite recursion detected in policy*
+**Lösung:** *Die Prüfungen in vier SECURITY DEFINER-Funktionen ausgelagert, die alle Policies nutzen. Was ich mitgenommen habe: Bei Fehlern zuerst in die Logs schauen statt der Vermutung der AI zu folgen, und RLS immer mit dem echten Client testen, nicht nur im SQL-Editor.*
 
 ---
 

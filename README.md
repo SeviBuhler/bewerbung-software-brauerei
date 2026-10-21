@@ -36,10 +36,8 @@ a11ce55 feat(prod): OASG-App für Schichtplanung & Buchungen live auf Vercel
 ### OASG – Schichtplanung & Buchungen · *in Produktion*
 Schichtplanungs- und Massage-Buchungs-App für einen echten Betrieb. Echte Nutzer, echtes Deployment.
 **Stack:** Vite · React · Tailwind · Upstash Redis · Vercel
-**Live:** [timesheetoasg.vercel.app](https://timesheetoasg.vercel.app) <!-- TODO: prüfen, ob öffentlich zeigbar; sonst Screenshots -->
-**Code:** [SeviBuhler/TODO-REPO](https://github.com/SeviBuhler/TODO-REPO)
-
-<!-- TODO: 1–2 Screenshots in /img ablegen und hier einbinden -->
+**Live:** [timesheetoasg.vercel.app](https://timesheetoasg.vercel.app)
+**Code:** [SeviBuhler/TODO-REPO](https://github.com/SeviBuhler/timesheet)
 
 ### Planungskalender-PWA · *in Arbeit*
 Gemeinsamer Planungskalender als PWA. Bewusst als Lernprojekt ohne Copy-Paste: Ich schreibe den Code selbst und lasse mich nur anleiten.
