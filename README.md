@@ -37,11 +37,11 @@ a11ce55 feat(prod): OASG-App für Schichtplanung & Buchungen live auf Vercel
 Schichtplanungs- und Massage-Buchungs-App für einen echten Betrieb. Echte Nutzer, echtes Deployment.
 **Stack:** Vite · React · Tailwind · Upstash Redis · Vercel
 **Live:** [timesheetoasg.vercel.app](https://timesheetoasg.vercel.app)
-**Code:** [SeviBuhler/TODO-REPO](https://github.com/SeviBuhler/timesheet)
+**Code:** [SeviBuhler/timesheet](https://github.com/SeviBuhler/timesheet)
 
 ### Planungskalender-PWA · *in Arbeit*
 Gemeinsamer Planungskalender als PWA. Bewusst als Lernprojekt ohne Copy-Paste: Ich schreibe den Code selbst und lasse mich nur anleiten.
-**Stack:** Vite · React · Tailwind · Supabase (Postgres, Row Level Security, Trigger-Funktionen)
+**Stack:** Angular · Tailwind · Supabase (Postgres, Row Level Security, Trigger-Funktionen)
 
 ### Homelab & Ops
 HPE ProLiant ML350 mit Proxmox VE, RAID 1, VMs, Fernzugriff per Tailscale, dazu ein Synology NAS. Darauf läuft u. a. ein Claude-gestützter Monitoring-Agent für meinen Trading-Bot – absichtlich **nur lesend**.
@@ -75,6 +75,6 @@ Langfassung → **[AI.md](AI.md)**
 
 ## 📬 Kontakt
 
-Severin Bühler · [sevi__buehler@hotmail.com](mailto:sevi__buehler@hotmail.com) · TODO Telefon · [LinkedIn](TODO)
+Severin Bühler · [sevi.buehler@outlook.com](mailto:sevi.buehler@outlook.com) · 079 407 37 43 · [LinkedIn](TODO)
 
 > Just Fucking Do It. – Ich hab's gemacht. 🍺
