@@ -63,7 +63,7 @@ Website, auf der sich die Gäste anmelden und nach der Hochzeit die Fotos ansehe
 **Code:** [SeviBuhler/Hochzeit_Lu_Roman](https://github.com/SeviBuhler/Hochzeit_Lu_Roman)
 
 ### Homelab & Ops
-HPE ProLiant ML350 mit Proxmox VE, RAID 1, VMs, Fernzugriff per Tailscale, dazu ein Synology NAS. Darauf läuft u. a. ein Claude-gestützter Monitoring-Agent für meinen Trading-Bot – absichtlich **nur lesend**.
+HPE ProLiant ML350 mit Proxmox VE, RAID 1, VMs, Fernzugriff per Tailscale, dazu ein Synology NAS. Darauf läuft u. a. ein Claude-gestützter Monitoring-Agent für meinen Trading-Bot – aktuell **nur lesend**.
 
 ### Godot-ARPG
 2D-Hybrid aus Vampire Survivors und Path of Exile: Combat, XP/Leveling, Wave-Spawning, Enemy-Scaling. Entwickelt mit Claude Code direkt im Projektordner.
@@ -97,4 +97,4 @@ Langfassung → **[AI.md](AI.md)**
 
 Severin Bühler · [sevi.buehler@outlook.com](mailto:sevi.buehler@outlook.com) · 079 407 37 43 · [LinkedIn](https://www.linkedin.com/in/severin-b%C3%BChler-626935254/)
 
-> Just Fucking Do It. – Ich hab's gemacht. 🍺
+> Just Fucking Do It? – I did it!. 🍺
